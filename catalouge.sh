@@ -3,7 +3,7 @@
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
-N="\e[37m"s
+N="\e[37m"
 
 log_folder="/var/log/roboshop-script"
 MONGODB_HOST="mongodb.msdevsecops.fun"
@@ -49,22 +49,34 @@ curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue
 VALIDATE $? "downloading catalouge application"
 cd /app 
 VALIDATE $? "changing  to app directory"
+
+rm -rf /app/*
+VALIDATE $? "removing existing code"
+
 unzip /tmp/catalogue.zip &>>$log_file
 VALIDATE $? "unzip catalouge" 
+
 npm install &>>$log_file
 VALIDATE $? "Installing dependencies"
+
 cp $SCRIPT_DIR/catalouge.setvice /etc/systemd/system/catalogue.service
 VALIDATE $? "copy systemctl sevice "
+
 systemctl daemon-reload
 systemctl enable catalogue &>>$log_file
 VALIDATE $? "enable catalouge"
+
 systemctl start catalogue
 VALIDATE $? "start catalouge"
+
 cp $SCRIPT_DIR/mongodb.repo vim /etc/yum.repos.d/mongo.repo
 VALIDATE $? "copy mongodb repo"
+
 dnf install mongodb-mongosh -y &>>$log_file
 VALIDATE $? "Installing mongodb client"
+
 mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$log_file
 VALIDATE $? "load catalouge products"
+
 systemctl restart catalogue
 VALIDATE $? "restart catalouge"

@@ -6,7 +6,7 @@ Y="\e[33m"
 N="\e[37m"
 
 log_folder="/var/log/roboshop-script"
-MONGODB_HOST="mongodb.msdevsecops.fun"
+MONGODB_HOST=mongodb.msdevsecops.fun
 SCRIPT_DIR=$PWD
 
 user=$(id -u)

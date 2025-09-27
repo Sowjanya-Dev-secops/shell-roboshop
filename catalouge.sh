@@ -69,7 +69,7 @@ VALIDATE $? "enable catalouge"
 systemctl start catalogue
 VALIDATE $? "start catalouge"
 
-cp $SCRIPT_DIR/mongodb.repo vim /etc/yum.repos.d/mongo.repo
+cp $SCRIPT_DIR/mongodb.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "copy mongodb repo"
 
 dnf install mongodb-mongosh -y &>>$log_file

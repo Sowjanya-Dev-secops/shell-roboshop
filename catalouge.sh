@@ -26,20 +26,16 @@ VALIDATE(){
     fi
 }
 
-cp mongodb.repo /etc/yum.repos.d/mongo.repo
-VALIDATE $? "Adding mongo repo"
+dnf module disable nodejs -y &>>$log_file
+VALIDATE $? "Disable nodejs"
 
-dnf install mongodb-org -y &>>$log_file
-VALIDATE $? "Installing Mongodb"
+dnf module enable nodejs:20 -y &>>$log_file
+VALIDATE $? "Disable nodejs"
 
-systemctl enable mongod
-VALIDATE $? "enable mongodb"
-
-systemctl start mongod
-VALIDATE $? "start mongodb"
-
-sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
-VALIDATE $? "allowing remote connections to mongodb"
-
-systemctl restart mongod
-VALIDATE $? "restart mongodb"
+dnf install nodejs -y &>>$log_file
+useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+mkdir /app 
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
+cd /app 
+unzip /tmp/catalogue.zip
+npm install 

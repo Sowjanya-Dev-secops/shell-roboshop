@@ -71,7 +71,7 @@ echo "copy mongodb repo"
 dnf install mongodb-mongosh -y &>>$log_file
 echo "Installing mongodb client"
 
-Index=$(mongosh $MONGODB_HOST --quiet --eval "db.getMongo().getDBNames().indexOf('catalouge')")
+Index=$(mongosh $MONGODB_HOST --quiet --eval "db.getMongo().getDBNames().indexOf('catalouge.set')")
 
 if [ $Index -le 0 ]; then
     mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$log_file

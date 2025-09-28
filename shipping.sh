@@ -28,7 +28,7 @@ VALIDATE(){
     fi
 }
 
-dnf install maven -y
+dnf install maven -y &>>$log_file
 
 id roboshop &>>$log_file
 if [ $? -ne 0 ]; then
@@ -52,12 +52,12 @@ unzip /tmp/shipping.zip &>>$log_file
 VALIDATE $?  "unzip shipping"
 
 cd /app 
-mvn clean package 
-mv target/shipping-1.0.jar shipping.jar 
+mvn clean package &>>$log_file
+mv target/shipping-1.0.jar shipping.jar &>>$log_file
 
 cp $script_dir/shipping.service /etc/systemd/system/shipping.service
 
-systemctl daemon-reload 
+systemctl daemon-reload &>>$log_file
 systemctl enable shipping &>>$log_file
 VALIDATE $? "enabling shipping" 
 systemctl start shipping &>>$log_file

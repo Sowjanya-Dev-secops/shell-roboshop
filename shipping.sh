@@ -65,11 +65,12 @@ systemctl start shipping &>>$log_file
 VALIDATE $? "start shipping"
 
 dnf install mysql -y &>>$log_file
-mysql -h $mysql_host -uroot -pRoboShop@1 -e 'use cities'
+VALIDATE $? "Installing mysql"
+mysql -h mysql.msdevsecops.fun -uroot -pRoboShop@1 -e 'use cities'
 if [ $? -ne 0 ]; then
-    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/schema.sql &>>$log_file
-    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$log_file
-    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$log_file
+    mysql -h mysql.msdevsecops.fu -uroot -pRoboShop@1 < /app/db/schema.sql &>>$log_file
+    mysql -h mysql.msdevsecops.fu -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$log_file
+    mysql -h mysql.msdevsecops.fu -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$log_file
 else
     echo "shipping data is already loaded.. $Y Skipp$N"
 

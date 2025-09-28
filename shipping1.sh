@@ -29,7 +29,7 @@ VALIDATE(){
     fi
 }
 
-dnf install maven -y
+dnf install maven -y &>>$log_file
 
 id roboshop &>>$log_file
 if [ $? -ne 0 ]; then

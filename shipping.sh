@@ -13,6 +13,7 @@ mkdir -p $log_folder
 log_file="$log_folder/$script_name.log"
 echo "script started excuted at: $(date)"| tee -a $log_file
 script_dir=$PWD
+mysql_host=mysql.msdevsecops.fun
 
 if [ $user -ne 0 ]; then
     echo -e "$R ERROR::$N proceed with root user"
@@ -64,11 +65,11 @@ systemctl start shipping &>>$log_file
 VALIDATE $? "start shipping"
 
 dnf install mysql -y &>>$log_file
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 -e 'use cities'
+mysql -h $mysql_host -uroot -pRoboShop@1 -e 'use cities'
 if [ $? -ne 0 ]; then
-    mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/db/schema.sql &>>$log_file
-    mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$log_file
-    mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$log_file
+    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/schema.sql &>>$log_file
+    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$log_file
+    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$log_file
 else
     echo "shipping data is already loaded.. $Y Skipp$N"
 

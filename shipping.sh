@@ -59,6 +59,7 @@ mv target/shipping-1.0.jar shipping.jar &>>$log_file
 cp $script_dir/shipping.service /etc/systemd/system/shipping.service
 
 systemctl daemon-reload &>>$log_file
+
 systemctl enable shipping &>>$log_file
 VALIDATE $? "enabling shipping" 
 systemctl start shipping &>>$log_file

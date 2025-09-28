@@ -56,7 +56,7 @@ cd /app
 mvn clean package &>>$log_file
 mv target/shipping-1.0.jar shipping.jar &>>$log_file
 
-cp $script_dir/shipping.service /etc/systemd/system/shipping.service
+cp $script_dir/shipping1.service /etc/systemd/system/shipping.service
 
 systemctl daemon-reload &>>$log_file
 

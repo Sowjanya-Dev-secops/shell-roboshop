@@ -66,7 +66,7 @@ VALIDATE $? "start shipping"
 
 dnf install mysql -y &>>$log_file
 VALIDATE $? "Installing mysql"
-mysql -h mysql.msdevsecops.fun -uroot -pRoboShop@1 -e 'use cities'
+mysql -h mysql.msdevsecops.fun -uroot -pRoboShop@1 -e 'use cities' &>>$log_file
 if [ $? -ne 0 ]; then
     mysql -h mysql.msdevsecops.fu -uroot -pRoboShop@1 < /app/db/schema.sql &>>$log_file
     mysql -h mysql.msdevsecops.fu -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$log_file

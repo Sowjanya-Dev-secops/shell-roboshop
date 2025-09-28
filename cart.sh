@@ -36,6 +36,7 @@ VALIDATE $? "Enable nodejs20"
 
 dnf install nodejs -y &>>$log_file
 VALIDATE $? "Installing NodeJs"
+
 id roboshop &>>$log_file
 if [ $? -ne 0 ]; then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$log_file
@@ -43,6 +44,7 @@ if [ $? -ne 0 ]; then
 else
     echo -e "user already created ...$Y skipp$N"
 fi
+
 mkdir -p /app 
 VALIDATE $? "creating App directotry"
 curl -o /tmp/cart.zip https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip &>>$log_file

@@ -7,6 +7,7 @@ N="\e[37m"
 
 log_folder="/var/log/roboshop-script"
 MONGODB_HOST=mongodb.msdevsecops.fun
+MYSQL_HOST=mysql.msdevsecops.fun
 SCRIPT_DIR=$PWD
 
 user=$(id -u)
@@ -51,11 +52,26 @@ VALIDATE $? "removing existing code"
 unzip /tmp/shipping.zip &>>$log_file
 VALIDATE $? "unzip catalouge"  
 
-mvn clean package
+mvn clean package &>>$log_file
 
-mv target/shipping-1.0.jar shipping.jar
+mv target/shipping-1.0.jar shipping.jar &>>$log_file
 
 cp $SCRIPT_DIR/shipping1.service /etc/systemd/system/shipping.service
 
 systemctl daemon-reload
-systemctl enable shipping
+systemctl enable shipping &>>$log_file
+VALIDATE $? "enableshipping"
+
+dnf install mysql -y &>>$log_file
+VALIDATE $? "instal mysql"
+
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities' &>>$log_file
+if [ $? -ne 0 ]; then
+    mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/schema.sql &>>$log_file
+    mysql -h $MYSQL_HOST-uroot -pRoboShop@1 < /app/db/app-user.sql &>>$log_file
+    mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$log_file
+else
+    echo -e "shipping data is already loaded..$Y skipp$N"
+fi
+
+systemctl restart shipping &>>$log_file

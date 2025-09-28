@@ -11,6 +11,7 @@ user=$(id -u)
 script_name=$( echo $0 | cut -d "." -f1 )
 mkdir -p $log_folder
 log_file="$log_folder/$script_name.log"
+echo "script started excuted at: $(date)"| tee -a $log_file
 
 if [ $user -ne 0 ]; then
     echo -e "$R ERROR::$N proceed with root user"
@@ -26,17 +27,17 @@ VALIDATE(){
     fi
 }
 
-dnf module disable redis -y
+dnf module disable redis -y &>>$log_file
 VALIDATE $? "Disabling default redis"
-dnf module enable redis:7 -y
+dnf module enable redis:7 -y &>>$log_file
 VALIDATE $? "enabling redis 7"
-dnf install redis -y 
+dnf install redis -y  &>>$log_file
 VALIDATE $? "installing redis"
 
-sed -i -e 's/127.0.0.1/0.0.0.0/g' -e 's/protected-mode yes/protected-mode no/g' /etc/redis/redis.conf
+sed -i -e 's/127.0.0.1/0.0.0.0/g' -e 's/protected-mode yes/protected-mode no/g' /etc/redis/redis.conf &>>$log_file
 VALIDATE $? "allowing remote connections to redis"
 
-systemctl enable redis 
+systemctl enable redis &>>$log_file
 VALIDATE $? "Enabling redis"
-systemctl start redis 
+systemctl start redis &>>$log_file
 VALIDATE $? "strt redis"

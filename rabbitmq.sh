@@ -12,7 +12,7 @@ script_name=$( echo $0 | cut -d "." -f1 )
 mkdir -p $log_folder
 log_file="$log_folder/$script_name.log"
 script_dir=$PWD
-start_time=$(date %s)
+starttime=$(date +%s)
 echo "script started excuted at: $(date)"| tee -a $log_file
 
 if [ $user -ne 0 ]; then
@@ -39,6 +39,10 @@ systemctl enable rabbitmq-server &>>$log_file
 VALIDATE $? "enabling rabbitmq server"
 systemctl start rabbitmq-server &>>$log_file
 VALIDATE $? "starting rabbitmq server"
+rabbitmqctl add_user roboshop roboshop123
+VALIDATE $? " add userrabbitmq server"
+rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
+VALIDATE $? "setting permissions rabbitmq server"
 
-endtime=$(date %s)
-total_time=$(( $endtime - $start_time ))
+endtime=$(date +%s)
+total_time=$(( $endtime - $starttime ))

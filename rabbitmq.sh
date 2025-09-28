@@ -11,6 +11,8 @@ user=$(id -u)
 script_name=$( echo $0 | cut -d "." -f1 )
 mkdir -p $log_folder
 log_file="$log_folder/$script_name.log"
+script_dir=$PWD
+start_time=$(date %s)
 echo "script started excuted at: $(date)"| tee -a $log_file
 
 if [ $user -ne 0 ]; then
@@ -27,17 +29,16 @@ VALIDATE(){
     fi
 }
 
-dnf module disable redis -y &>>$log_file
-VALIDATE $? "Disabling default redis"
-dnf module enable redis:7 -y &>>$log_file
-VALIDATE $? "enabling redis 7"
-dnf install redis -y  &>>$log_file
-VALIDATE $? "installing redis"
+cp $script_dir/rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
+VALIDATE $? "adding rabbitmq repo"
 
-sed -i -e 's/127.0.0.1/0.0.0.0/g' -e 's/protected-mode yes/protected-mode no/g' /etc/redis/redis.conf &>>$log_file
-VALIDATE $? "allowing remote connections to redis"
+dnf install rabbitmq-server -y &>>$log_file
+VALIDATE $? "installing rabbitmq server"
 
-systemctl enable redis &>>$log_file
-VALIDATE $? "Enabling redis"
-systemctl start redis &>>$log_file
-VALIDATE $? "strt redis"
+systemctl enable rabbitmq-server &>>$log_file
+VALIDATE $? "enabling rabbitmq server"
+systemctl start rabbitmq-server &>>$log_file
+VALIDATE $? "starting rabbitmq server"
+
+endtime=$(date %s)
+total_time=$(( $endtime - $start_time ))

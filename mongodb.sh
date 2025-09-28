@@ -3,7 +3,7 @@
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
-N="\e[37m"s
+N="\e[37m"
 
 log_folder="/var/log/roboshop-script"
 

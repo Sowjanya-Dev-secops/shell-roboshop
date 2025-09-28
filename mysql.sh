@@ -3,7 +3,7 @@
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
-N="\e[37m"s
+N="\e[37m"
 
 log_folder="/var/log/roboshop-script"
 
@@ -27,11 +27,11 @@ VALIDATE(){
     fi
 }
 
-dnf install mysql-server -y
+dnf install mysql-server -y &>>$log_file
 VALIDATE $? "Installing mysql server"
-systemctl enable mysqld
+systemctl enable mysqld&>>$log_file
 VALIDATE $? "enabling mysql server"
-systemctl start mysqld  
+systemctl start mysqld  &>>$log_file
 VALIDATE $? "start mysql server"
-mysql_secure_installation --set-root-pass RoboShop@1
+mysql_secure_installation --set-root-pass RoboShop@1 &>>$log_file
 VALIDATE $? "setting up root password "
